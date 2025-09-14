@@ -1,0 +1,55 @@
+
+Before diving into Kubernetes, it’s crucial to understand containers, the building blocks of modern cloud-native applications. And the most popular container platform is Docker.
+
+
+
+Why Docker became popular
+
+Containers existed for years, but they were often complex to manage and not very portable. Docker changed that. It allowed developers to package an application with everything it needs to run—including libraries, dependencies, and even parts of the operating system—into a single portable unit. This ensures that your app runs exactly the same way on any system with Docker installed, whether it’s your laptop, a testing server, or a cloud environment.
+
+Core Concepts to Know
+
+
+
+1. Images
+
+Think of an image as a template or blueprint for your application. It contains everything your app needs to run. You can create an image once and then reuse it multiple times to launch containers. Images are like snapshots of your app’s environment.
+
+
+
+2. Registries
+
+Once an image is ready, it can be stored and shared through a registry. There are public registries (like Docker Hub) accessible by anyone, and private registries, restricted to authorized users or teams. Registries make it easy to distribute your application across different environments.
+
+
+
+3. Containers
+
+A container is a running instance of an image. It’s isolated from the host system and other containers, meaning it has its own filesystem, processes, and network settings. Containers can also have resource limits, such as CPU and memory, making them lightweight and efficient.
+
+How the Workflow Works
+
+Build an image on your development machine.
+
+Push the image to a registry so others can access it.
+
+Pull the image on any other machine with Docker installed.
+
+Run a container from the image. The application behaves consistently because the environment is packaged inside the image.
+
+This workflow ensures that your application is portable, predictable, and isolated, solving the classic “it works on my machine” problem.
+
+
+
+Why this matters for Kubernetes
+
+Docker containers are the foundation that Kubernetes manages. While Docker handles packaging and running applications on a single system, Kubernetes orchestrates containers across multiple machines, handling scaling, networking, updates, and fault tolerance.
+
+
+
+
+
+Key Takeaway:
+
+Understanding Docker is essential before diving into Kubernetes. It ensures you know how applications are packaged, deployed, and run in a containerized environment, which is the first step toward mastering container orchestration.
+
