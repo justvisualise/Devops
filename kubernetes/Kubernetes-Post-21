@@ -1,0 +1,84 @@
+What the Kubelet Does
+
+When we talk about Kubernetes, most people focus on the Control Plane components—the API Server, Scheduler, and Controllers. These are like the “brains” of Kubernetes, making all the decisions about what should run, where it should run, and how the system should behave.
+
+But decisions alone don’t make containers run. For that, you need something on the worker nodes that actually executes those instructions. That crucial component is the Kubelet. 🚀
+
+
+Where does the Kubelet run?
+
+Controllers run on the Control Plane (master nodes).
+
+The Kubelet (along with kube-proxy) runs on every worker node.
+
+It acts as the bridge between the Control Plane and the actual containers.
+
+Simply put: without the Kubelet, no Pod would ever start running.
+
+
+The Kubelet’s Core Responsibilities
+
+Node Registration
+
+When it starts, the Kubelet registers its node to the cluster by creating a Node object in the API server.
+
+This tells Kubernetes: “Hey, I’m alive and ready to run workloads.”
+
+Pod Management
+
+It continuously watches the API Server for any new Pods assigned to its node.
+
+Then it tells the container runtime (Docker, containerd, or CRI-O) to pull the required image and start the container.
+
+It keeps track of whether the containers are still running as expected.
+
+Health Monitoring
+
+Runs liveness, readiness, and startup probes for containers.
+
+If a container crashes or a probe fails, the Kubelet restarts it.
+
+If a Pod is deleted in the API Server, the Kubelet ensures its containers are stopped and resources freed.
+
+Reporting Back
+
+Constantly reports Pod and Node status, events, and metrics (CPU, memory, disk usage, etc.) back to the API Server.
+
+This feedback helps Kubernetes make scheduling, scaling, and healing decisions.
+
+Static Pods – Running Without API Server
+
+The Kubelet usually depends on the API Server for Pod manifests.
+But it can also run Pods directly from a local manifest directory (--pod-manifest-path).
+
+These Pods are called Static Pods.
+
+This mechanism is often used for Kubernetes’ own system components. For example, on many setups, the API Server, etcd, Controller Manager, and Scheduler themselves run as Static Pods managed by the Kubelet instead of systemd services.
+
+So even if the Control Plane is down, the Kubelet can keep these Pods alive.
+
+
+In Simple Words
+
+Think of the Kubelet as the worker node’s manager:
+
+It registers itself in the cluster.
+
+It accepts work (Pods) assigned by the API Server.
+
+It makes sure the work (containers) is actually running.
+
+It restarts work if it fails.
+
+It reports back progress and health.
+
+It can even do some work (Static Pods) without waiting for instructions from the Control Plane.
+
+Without the Kubelet, Kubernetes would just be an empty promise—plans would exist on paper, but no container would ever actually run.
+
+
+
+Key Takeaway
+
+The Kubelet is the heartbeat of every worker node.
+It ensures that the instructions coming from the Control Plane are faithfully executed on the ground. It’s the reason why Kubernetes can call itself a self-healing system—because the Kubelet constantly monitors, restarts, and reports everything happening inside your containers.
