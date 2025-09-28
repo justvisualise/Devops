@@ -1,0 +1,39 @@
+Inter-Pod Networking
+
+When you first deploy a pod in Kubernetes, it gets its own unique IP address. This makes you think – “Okay, if every pod has an IP, they must already be able to talk to each other like normal servers.”
+
+But here’s the catch 
+Kubernetes itself does not configure the networking between pods. Instead, this responsibility lies with the Container Network Interface (CNI) plugin – tools like Flannel, Calico, Cilium, Weave Net – or your cluster admin.
+
+So, what does Kubernetes actually require?
+
+
+The rules of pod networking in Kubernetes:
+Every pod should be able to communicate with every other pod in the cluster, without NAT.
+The IP a pod sees for itself must be the same IP address other pods use to reach it.
+Communication should work whether pods are on the same node or on different nodes.
+
+This means if Pod A at 10.1.1.1 sends a packet to Pod B at 10.1.2.1, then Pod B should see the packet coming directly from 10.1.1.1 – no translations, no tricks.
+
+
+
+Why is this important?
+Because it keeps things simple for applications inside pods. Imagine a notification service running in Pod Y. Pod X registers with Pod Y and says:
+     “I’m Pod X, you can reach me at 10.1.1.1.”
+
+If NAT were in place, Pod Y might see some different IP instead of 10.1.1.1, and it wouldn’t know how to connect back properly. NAT-less networking ensures apps can discover and connect to each other directly – just like they’re on the same LAN.
+
+
+
+But what about the internet?
+Here, things are different. Pod IPs are private, so when a pod sends traffic outside the cluster, NAT comes in. The packet’s source IP is changed to the node’s IP address, allowing it to communicate with the external world.
+
+
+Real-world analogy (to #justvisualise better):
+          Think of a Kubernetes cluster like an office building.
+
+Each pod is like an employee with their own direct phone extension.
+
+Inside the building, employees can dial each other directly – no receptionist, no call forwarding – everyone’s extension is visible and reachable.
+But if someone wants to call outside the building (internet), the call goes through the main office number (the node’s IP), because external people can’t directly reach internal extensions.
+This design keeps internal communication smooth and transparent, while still keeping external communication secure and manageable.
